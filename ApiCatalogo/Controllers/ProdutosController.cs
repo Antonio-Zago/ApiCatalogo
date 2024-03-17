@@ -1,6 +1,8 @@
 ﻿using ApiCatalogo.Context;
 using ApiCatalogo.Models;
+using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiCatalogo.Controllers
@@ -9,43 +11,40 @@ namespace ApiCatalogo.Controllers
     [ApiController]
     public class ProdutosController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IProdutoRepository _produtoRepository;
 
-        public ProdutosController(AppDbContext appDbContext)
+        public ProdutosController(IUnitOfWork unitOfWork, IProdutoRepository produtoRepository)
         {
-            _appDbContext = appDbContext;
+            _unitOfWork = unitOfWork;
+            _produtoRepository = produtoRepository;
         }
 
+        //Transformei o método em assincrono, porque possui uma operação de acessar o banco de dados
+        //sendo assim, é um processo que não depende da minha aplicação
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public  ActionResult<IEnumerable<Produto>> Get()
         {
-            var produtos = _appDbContext.Produtos.ToList();
+            var produtos = _unitOfWork.ProdutoRepository.GetAll();
 
-            if (produtos == null)
-            {
-                return NotFound("Produtos não encontrados");
-            }
-            return produtos;
+            return Ok(produtos);
         }
 
-        [HttpGet("{id:int}", Name ="ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        //Restrição no parametro para não aceitar valores menores que 1
+        //O BindRequired torna o parametro da QueryString obrigatorio
+        [HttpGet("{id:int:min(1)}", Name ="ObterProduto")]
+        public ActionResult<Produto> Get(int id, [BindRequired]string nome)
         {
-            var produto = _appDbContext.Produtos.Where(p => p.ProdutoId == id).FirstOrDefault();
 
-            if (produto == null)
-            {
-                return NotFound("Produto não encontrado");
-            }
-            return produto;
+            var produto = _unitOfWork.ProdutoRepository.Get(p => p.ProdutoId == id);
+            return Ok(produto);
         }
 
         [HttpPost]
         public ActionResult Post(Produto produto)
         {
-            _appDbContext.Produtos.Add(produto);
-
-            _appDbContext.SaveChanges();
+            _unitOfWork.ProdutoRepository.Post(produto);
+            _unitOfWork.Commit();
 
             return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId}, produto);
         }
@@ -53,13 +52,8 @@ namespace ApiCatalogo.Controllers
         [HttpPut("{id:int}")]
         public ActionResult Put(int id,Produto produto) 
         {
-            if (id != produto.ProdutoId) 
-            {
-                return BadRequest();
-            }
-
-            _appDbContext.Entry(produto).State = EntityState.Modified;
-            _appDbContext.SaveChanges();
+            _unitOfWork.ProdutoRepository.Put(produto);
+            _unitOfWork.Commit();
 
             return Ok(produto);
         }
@@ -67,17 +61,20 @@ namespace ApiCatalogo.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id) 
         {
-            var produto = _appDbContext.Produtos.FirstOrDefault(a => a.ProdutoId == id);
+            var produto = _unitOfWork.ProdutoRepository.Get(p => p.ProdutoId == id);
 
-            if(produto == null)
-            {
-                return NotFound();
-            }
-
-            _appDbContext.Produtos.Remove(produto);
-            _appDbContext.SaveChanges();
+            _unitOfWork.ProdutoRepository.Delete(produto);
+            _unitOfWork.Commit();
 
             return Ok(produto);
+        }
+
+        [HttpGet("categorias/{id}")]
+        public ActionResult<IEnumerable<Produto>> GetProdutosPorCategoria(int id)
+        {
+            var produtos = _produtoRepository.GetPorCategorias(id);
+
+            return Ok(produtos);
         }
 
 

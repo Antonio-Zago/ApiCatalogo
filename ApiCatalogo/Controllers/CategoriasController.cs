@@ -1,5 +1,7 @@
 ﻿using ApiCatalogo.Context;
+using ApiCatalogo.Filters;
 using ApiCatalogo.Models;
+using ApiCatalogo.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,57 +12,53 @@ namespace ApiCatalogo.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public CategoriasController(AppDbContext appDbContext)
+        public CategoriasController(IUnitOfWork unitOfWork, IConfiguration configuration)
         {
-            _appDbContext = appDbContext;
+            _unitOfWork = unitOfWork;
+            _configuration = configuration;
         }
 
-        [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
-        {
-            var categorias = _appDbContext.Categorias.Include(p => p.Produtos).ToList();
 
-            if (categorias == null)
-            {
-                return NotFound("Categorias não encontradas");
-            }
-            return categorias;
-        }
+        //Lendo arquivo de configuração appsettings.development.json
+        [HttpGet("lerArquivoConfiguracao")]
+        public string GetValores()
+        {
+
+            var chave1 = _configuration["chave1"];
+            var chave2 = _configuration["chave2"];
+            return chave1 + chave2;
+        }   
 
         [HttpGet]
+        //Filtro aplicado ao controlador, sendo possível definir código antes e depois da ação ser executada
+        [ServiceFilter(typeof(ApiLoggiingFilter))]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
             //AsNoTracking é uma boa prática porque melhora o desempenho visto que a entidade não será rastreada
             //Importante lembra que deve-se utilizar isso quando temos certeza que não precisamos alterar essa entidade da consulta
-            var categorias = _appDbContext.Categorias.AsNoTracking().ToList();
+            //var categorias = _appDbContext.Categorias.AsNoTracking().ToList();
 
-            if (categorias == null)
-            {
-                return NotFound("Categorias não encontradas");
-            }
-            return categorias;
+            var categorias = _unitOfWork.CategoriaRepository.GetAll();
+
+            return Ok(categorias);
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            var categoria = _appDbContext.Categorias.AsNoTracking().Where(p => p.CategoriaId == id).FirstOrDefault();
+            var categoria = _unitOfWork.CategoriaRepository.Get(c => c.CategoriaId == id);
 
-            if (categoria == null)
-            {
-                return NotFound("Categoria não encontrado");
-            }
-            return categoria;
+            return Ok(categoria);
         }
 
         [HttpPost]
         public ActionResult Post(Categoria categoria)
         {
-            _appDbContext.Categorias.Add(categoria);
-
-            _appDbContext.SaveChanges();
+            _unitOfWork.CategoriaRepository.Post(categoria);
+            _unitOfWork.Commit();
 
             return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
         }
@@ -68,13 +66,8 @@ namespace ApiCatalogo.Controllers
         [HttpPut("{id:int}")]
         public ActionResult Put(int id, Categoria categoria)
         {
-            if (id != categoria.CategoriaId)
-            {
-                return BadRequest();
-            }
-
-            _appDbContext.Entry(categoria).State = EntityState.Modified;
-            _appDbContext.SaveChanges();
+            _unitOfWork.CategoriaRepository.Put(categoria);
+            _unitOfWork.Commit();
 
             return Ok(categoria);
         }
@@ -82,15 +75,15 @@ namespace ApiCatalogo.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var categoria = _appDbContext.Categorias.FirstOrDefault(a => a.CategoriaId == id);
+            var categoria = _unitOfWork.CategoriaRepository.Get(c => c.CategoriaId == id);
 
             if (categoria == null)
             {
                 return NotFound();
             }
 
-            _appDbContext.Categorias.Remove(categoria);
-            _appDbContext.SaveChanges();
+            _unitOfWork.CategoriaRepository.Delete(categoria);
+            _unitOfWork.Commit();
 
             return Ok(categoria);
         }

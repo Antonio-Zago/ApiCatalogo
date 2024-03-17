@@ -1,0 +1,64 @@
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 20101 - Executed DbCommand (155ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Information: 20101 - Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 20101 - Executed DbCommand (153ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Error: 0 - Ocorreu um erro
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 20101 - Executed DbCommand (129ms) [Parameters=[@__id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+WHERE `p`.`ProdutoId` = @__id_0
+LIMIT 1
+Information: 20101 - Executed DbCommand (26ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Information: 20101 - Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Development
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 20101 - Executed DbCommand (80ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT `p`.`ProdutoId`, `p`.`CategoriaId`, `p`.`DataCadastro`, `p`.`Descricao`, `p`.`Estoque`, `p`.`ImagemUrl`, `p`.`Nome`, `p`.`Preco`
+FROM `Produtos` AS `p`
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Production
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Production
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Production
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
+Information: 14 - Now listening on: http://localhost:5203
+Information: 0 - Application started. Press Ctrl+C to shut down.
+Information: 0 - Hosting environment: Production
+Information: 0 - Content root path: C:\Users\anton\Desktop\Projetos\ApiCatalogo\ApiCatalogo
+Warning: 3 - Failed to determine the https port for redirect.
