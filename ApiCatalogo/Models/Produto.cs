@@ -35,7 +35,9 @@ namespace ApiCatalogo.Models
         public int CategoriaId { get; set; }
 
 
-        [JsonIgnore]
+        //[JsonIgnore]
+        //Retirei porque comecei a utilizar o Autommapper para mapear a entidade no dto
+        //E isso impede de realizar o mapeamento personalizado do nome da categoria
         public Categoria? Categoria { get; set; }
 
         //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

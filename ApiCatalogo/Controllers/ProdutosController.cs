@@ -1,6 +1,8 @@
 ﻿using ApiCatalogo.Context;
+using ApiCatalogo.Dtos;
 using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -12,22 +14,24 @@ namespace ApiCatalogo.Controllers
     public class ProdutosController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IProdutoRepository _produtoRepository;
+        private readonly IMapper _mapper;
 
-        public ProdutosController(IUnitOfWork unitOfWork, IProdutoRepository produtoRepository)
+        public ProdutosController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-            _produtoRepository = produtoRepository;
+            _mapper = mapper;
         }
 
         //Transformei o método em assincrono, porque possui uma operação de acessar o banco de dados
         //sendo assim, é um processo que não depende da minha aplicação
         [HttpGet]
-        public  ActionResult<IEnumerable<Produto>> Get()
+        public  ActionResult<IEnumerable<ProdutoDto>> Get()
         {
             var produtos = _unitOfWork.ProdutoRepository.GetAll();
 
-            return Ok(produtos);
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
+
+            return Ok(produtosDto);
         }
 
         //Restrição no parametro para não aceitar valores menores que 1
@@ -37,12 +41,18 @@ namespace ApiCatalogo.Controllers
         {
 
             var produto = _unitOfWork.ProdutoRepository.Get(p => p.ProdutoId == id);
+
+            var produtoDto = _mapper.Map<ProdutoDto>(produto);
+
             return Ok(produto);
         }
 
         [HttpPost]
-        public ActionResult Post(Produto produto)
+        public ActionResult<Produto> Post(Produto produto)
         {
+
+            //var produto = _mapper.Map<Produto>(produtoDto);
+
             _unitOfWork.ProdutoRepository.Post(produto);
             _unitOfWork.Commit();
 
@@ -50,8 +60,10 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id,Produto produto) 
+        public ActionResult<ProdutoDto> Put(int id, ProdutoDto produtoDto) 
         {
+            var produto = _mapper.Map<Produto>(produtoDto);
+
             _unitOfWork.ProdutoRepository.Put(produto);
             _unitOfWork.Commit();
 
@@ -59,22 +71,26 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id) 
+        public ActionResult<ProdutoDto> Delete(int id) 
         {
             var produto = _unitOfWork.ProdutoRepository.Get(p => p.ProdutoId == id);
 
             _unitOfWork.ProdutoRepository.Delete(produto);
             _unitOfWork.Commit();
 
-            return Ok(produto);
+            var produtoDto = _mapper.Map<ProdutoDto>(produto);
+
+            return Ok(produtoDto);
         }
 
         [HttpGet("categorias/{id}")]
-        public ActionResult<IEnumerable<Produto>> GetProdutosPorCategoria(int id)
+        public ActionResult<IEnumerable<ProdutoDto>> GetProdutosPorCategoria(int id)
         {
-            var produtos = _produtoRepository.GetPorCategorias(id);
+            var produtos = _unitOfWork.ProdutoRepository.GetPorCategorias(id);
 
-            return Ok(produtos);
+            var produtosDto = _mapper.Map<IEnumerable<ProdutoDto>>(produtos);
+
+            return Ok(produtosDto);
         }
 
 

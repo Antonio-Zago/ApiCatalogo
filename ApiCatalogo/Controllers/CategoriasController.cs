@@ -1,4 +1,5 @@
 ﻿using ApiCatalogo.Context;
+using ApiCatalogo.Dtos;
 using ApiCatalogo.Filters;
 using ApiCatalogo.Models;
 using ApiCatalogo.Repositories;
@@ -35,7 +36,7 @@ namespace ApiCatalogo.Controllers
         [HttpGet]
         //Filtro aplicado ao controlador, sendo possível definir código antes e depois da ação ser executada
         [ServiceFilter(typeof(ApiLoggiingFilter))]
-        public ActionResult<IEnumerable<Categoria>> Get()
+        public ActionResult<IEnumerable<CategoriaDto>> Get()
         {
             //AsNoTracking é uma boa prática porque melhora o desempenho visto que a entidade não será rastreada
             //Importante lembra que deve-se utilizar isso quando temos certeza que não precisamos alterar essa entidade da consulta
@@ -47,24 +48,38 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id)
+        public ActionResult<CategoriaDto> Get(int id)
         {
             var categoria = _unitOfWork.CategoriaRepository.Get(c => c.CategoriaId == id);
 
-            return Ok(categoria);
+            var categoriaDto = new CategoriaDto()
+            {
+                CategoriaId = categoria.CategoriaId,
+                Nome = categoria.Nome,
+                ImagemUrl = categoria.ImagemUrl
+            };
+
+            return Ok(categoriaDto);
         }
 
         [HttpPost]
-        public ActionResult Post(Categoria categoria)
+        public ActionResult<CategoriaDto> Post(CategoriaDto categoriaDto)
         {
+            var categoria = new Categoria() {
+                CategoriaId = categoriaDto.CategoriaId,
+                Nome = categoriaDto.Nome,
+                ImagemUrl = categoriaDto.ImagemUrl
+        };
+            
+
             _unitOfWork.CategoriaRepository.Post(categoria);
             _unitOfWork.Commit();
 
-            return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
+            return new CreatedAtRouteResult("ObterCategoria", new { id = categoriaDto.CategoriaId }, categoriaDto);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult Put(int id, Categoria categoria)
+        public ActionResult<Categoria> Put(int id, Categoria categoria)
         {
             _unitOfWork.CategoriaRepository.Put(categoria);
             _unitOfWork.Commit();
@@ -73,7 +88,7 @@ namespace ApiCatalogo.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public ActionResult<Categoria> Delete(int id)
         {
             var categoria = _unitOfWork.CategoriaRepository.Get(c => c.CategoriaId == id);
 

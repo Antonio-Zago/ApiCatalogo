@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "pKYZjt2rUhkegD44vuRx2TF8yyGwvkpfR0L8vuZkbCe5bQmsyD4HudYHddCscUNDtFmWBMuUMQpzfavZgD3JkA==",
+  "dgSpecHash": "dF9PNJjqI8Mgjty4hHO7JPU/CQIbLK4+uyVpkX5n82GvrJNsi5IZ1SXbJPin4GS4k7fCe0kpupurY1s+5BY2Hg==",
   "success": true,
   "projectFilePath": "C:\\Users\\anton\\Desktop\\Projetos\\ApiCatalogo\\ApiCatalogo\\ApiCatalogo.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\anton\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\anton\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\anton\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\anton\\.nuget\\packages\\microsoft.codeanalysis.analyzers\\3.3.3\\microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
